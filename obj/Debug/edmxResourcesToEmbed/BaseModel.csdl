@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ProcatModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Client">
+    <Key>
+      <PropertyRef Name="CodeClient" />
+    </Key>
+    <Property Name="IDClient" Type="Int32" />
+    <Property Name="LastName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="FirstName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Patronimic" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CodeClient" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="Passport" Type="Int32" />
+    <Property Name="DateBirth" Type="DateTime" Precision="0" />
+    <Property Name="Adress" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Mail" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Ordder" Relationship="Self.FK_Ordder_Client" FromRole="Client" ToRole="Ordder" />
+  </EntityType>
+  <EntityType Name="Ordder">
+    <Key>
+      <PropertyRef Name="IDOrder" />
+    </Key>
+    <Property Name="IDOrder" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="DateOrder" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="TimeOrder" Type="Time" Precision="7" />
+    <Property Name="CodeClient" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="IDService" Type="Int32" />
+    <Property Name="StatusOrder" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="DateReady" Type="DateTime" Precision="0" />
+    <Property Name="Time" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <NavigationProperty Name="Client" Relationship="Self.FK_Ordder_Client" FromRole="Ordder" ToRole="Client" />
+    <NavigationProperty Name="Service" Relationship="Self.FK_Ordder_Service" FromRole="Ordder" ToRole="Service" />
+  </EntityType>
+  <EntityType Name="Role">
+    <Key>
+      <PropertyRef Name="IDRole" />
+    </Key>
+    <Property Name="IDRole" Type="Int32" Nullable="false" />
+    <Property Name="NameRole" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Worker" Relationship="Self.FK_Worker_Role" FromRole="Role" ToRole="Worker" />
+  </EntityType>
+  <EntityType Name="Service">
+    <Key>
+      <PropertyRef Name="IDService" />
+    </Key>
+    <Property Name="IDService" Type="Int32" Nullable="false" />
+    <Property Name="NamaService" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CodeService" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PriceService" Type="Decimal" Precision="19" Scale="4" />
+    <NavigationProperty Name="Ordder" Relationship="Self.FK_Ordder_Service" FromRole="Service" ToRole="Ordder" />
+  </EntityType>
+  <EntityType Name="Session">
+    <Key>
+      <PropertyRef Name="IDSession" />
+    </Key>
+    <Property Name="IDSession" Type="Int32" Nullable="false" />
+    <Property Name="IDWorker" Type="Int32" />
+    <Property Name="DateSession" Type="DateTime" Precision="0" />
+    <Property Name="TimeSession" Type="Time" Precision="7" />
+    <NavigationProperty Name="Worker" Relationship="Self.FK_Session_Worker" FromRole="Session" ToRole="Worker" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Worker">
+    <Key>
+      <PropertyRef Name="IDWorker" />
+    </Key>
+    <Property Name="IDWorker" Type="Int32" Nullable="false" />
+    <Property Name="IDRole" Type="Int32" />
+    <Property Name="LastName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="FirstName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Patronimic" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Login" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Type" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="Photo" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <NavigationProperty Name="Role" Relationship="Self.FK_Worker_Role" FromRole="Worker" ToRole="Role" />
+    <NavigationProperty Name="Session" Relationship="Self.FK_Session_Worker" FromRole="Worker" ToRole="Session" />
+  </EntityType>
+  <Association Name="FK_Ordder_Client">
+    <End Role="Client" Type="Self.Client" Multiplicity="0..1" />
+    <End Role="Ordder" Type="Self.Ordder" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Client">
+        <PropertyRef Name="CodeClient" />
+      </Principal>
+      <Dependent Role="Ordder">
+        <PropertyRef Name="CodeClient" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Ordder_Service">
+    <End Role="Service" Type="Self.Service" Multiplicity="0..1" />
+    <End Role="Ordder" Type="Self.Ordder" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Service">
+        <PropertyRef Name="IDService" />
+      </Principal>
+      <Dependent Role="Ordder">
+        <PropertyRef Name="IDService" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Worker_Role">
+    <End Role="Role" Type="Self.Role" Multiplicity="0..1" />
+    <End Role="Worker" Type="Self.Worker" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Role">
+        <PropertyRef Name="IDRole" />
+      </Principal>
+      <Dependent Role="Worker">
+        <PropertyRef Name="IDRole" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Session_Worker">
+    <End Role="Worker" Type="Self.Worker" Multiplicity="0..1" />
+    <End Role="Session" Type="Self.Session" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Worker">
+        <PropertyRef Name="IDWorker" />
+      </Principal>
+      <Dependent Role="Session">
+        <PropertyRef Name="IDWorker" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="ProcatEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Client" EntityType="Self.Client" />
+    <EntitySet Name="Ordder" EntityType="Self.Ordder" />
+    <EntitySet Name="Role" EntityType="Self.Role" />
+    <EntitySet Name="Service" EntityType="Self.Service" />
+    <EntitySet Name="Session" EntityType="Self.Session" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+    <EntitySet Name="Worker" EntityType="Self.Worker" />
+    <AssociationSet Name="FK_Ordder_Client" Association="Self.FK_Ordder_Client">
+      <End Role="Client" EntitySet="Client" />
+      <End Role="Ordder" EntitySet="Ordder" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Ordder_Service" Association="Self.FK_Ordder_Service">
+      <End Role="Service" EntitySet="Service" />
+      <End Role="Ordder" EntitySet="Ordder" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Worker_Role" Association="Self.FK_Worker_Role">
+      <End Role="Role" EntitySet="Role" />
+      <End Role="Worker" EntitySet="Worker" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Session_Worker" Association="Self.FK_Session_Worker">
+      <End Role="Worker" EntitySet="Worker" />
+      <End Role="Session" EntitySet="Session" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
